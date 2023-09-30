@@ -1,13 +1,11 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
-
-
-SQLALCHEMY_DATABASE_URL = "postgresql://postgres:1801@localhost/dips_test"
+from config.config import get_db_url
 
 
 engine = create_engine(
-    SQLALCHEMY_DATABASE_URL,
+    url = get_db_url()
 )
 SessionLocal = sessionmaker(
     autocommit=False,
