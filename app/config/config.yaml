@@ -1,6 +1,10 @@
-database:
-  POSTGRES_USER: postgres
-  POSTGRES_PASSWORD: 1801
-  POSTGRES_DB: dips_test
-  POSTGRES_HOST: 127.0.0.1
-  POSTGRES_PORT: 8006
+postgres_db:
+  user: postgres
+  password: password
+  db: person_db
+  host: database
+app:
+  host: "0.0.0.0"
+  port: 8080
+  log_level: "info"
+  reload: True

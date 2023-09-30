@@ -14,11 +14,11 @@ app.include_router(api_router, prefix="/api/v1")
 
 
 if __name__ == '__main__':
-    db_settings = get_db_settings()
+    settings = get_db_settings()
     uvicorn.run(
         "main:app", 
-        host=db_settings["POSTGRES_HOST"], 
-        port=db_settings["POSTGRES_PORT"], 
-        log_level="info",
-        reload=True
+        host=settings["app"]["host"],
+        port=settings["app"]["port"],
+        log_level=settings["app"]["log_level"],
+        reload=settings["app"]["reload"],
     )
