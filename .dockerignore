@@ -1,4 +1,6 @@
 __pycache__/
 venv/
 db_data/
+.vscode/
+docs/
 README.md

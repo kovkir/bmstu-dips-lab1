@@ -8,8 +8,7 @@ class PersonModel(Base):
     __tablename__ = "persons"
 
     id = Column(Integer, primary_key=True, index=True)
-    first_name = Column(String, nullable=False)
-    last_name = Column(String, nullable=False)
-    birth_year = Column(Integer, nullable=False, index=True)
-    email = Column(String, unique=True)
-    is_man = Column(Boolean, nullable=False, index=True)
+    name = Column(String, unique=True, nullable=False)
+    age = Column(Integer)
+    address = Column(String, unique=True)
+    work = Column(String)

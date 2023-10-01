@@ -1,28 +1,28 @@
-from pydantic import BaseModel, ConfigDict, EmailStr
+from pydantic import BaseModel, ConfigDict
 from fastapi import Query
 from typing import Annotated
 
 
 class PersonBase(BaseModel):
-    first_name: str
-    last_name: str
-    birth_year: Annotated[int | None, Query(gt=1900, lt=2023)]
-    email: EmailStr | None = None
-    is_man: bool
+    name: str
+    age: Annotated[int | None, Query(ge=1, le=120)] = None
+    address: str | None = None
+    work: str | None = None
 
 
 class PersonFilter(BaseModel):
-    first_name: str | None = None
-    last_name: str | None = None
-    min_birth_year: Annotated[int | None, Query(gt=1900, lt=2023)] = None,
-    max_birth_year: Annotated[int | None, Query(gt=1900, lt=2023)] = None,
-    email: EmailStr | None = None
-    is_man: bool | None = None
+    name: str | None
+    min_age: Annotated[int | None, Query(ge=1, le=120)] = None
+    max_age: Annotated[int | None, Query(ge=1, le=120)] = None
+    address: str | None = None
+    work: str | None = None
 
 
 class PersonUpdate(BaseModel):
-    email: EmailStr | None = None
-    last_name: str = None
+    name: str | None = None
+    age: Annotated[int | None, Query(ge=1, le=120)] = None
+    address: str | None = None
+    work: str | None = None
 
 
 class PersonCreate(PersonBase):

@@ -2,20 +2,17 @@ from enum import Enum
 
 
 class SortPerson(Enum):
-    FirstNameAsc  = "first_name_asc"
-    FirstNameDesc = "first_name_desc"
+    NameAsc  = "name_asc"
+    NameDesc = "name_desc"
 
-    LastNameAsc  = "last_name_asc"
-    LastNameDesc = "last_name_desc"
+    AgeAsc  = "age_asc"
+    AgeDesc = "age_desc"
 
-    BirthYearAsc  = "birth_year_asc"
-    BirthYearDesc = "birth_year_desc"
+    AddressAsc  = "address_asc"
+    AddressDesc = "address_desc"
 
-    EmailAsc  = "email_asc"
-    EmailDesc = "email_desc"
-
-    IsManAsc  = "is_man_asc"
-    IsManDesc = "is_man_desc"
+    WorkAsc  = "work_asc"
+    WorkDesc = "work_desc"
 
     IdAsc  = "id_asc"
     IdDesc = "id_desc"

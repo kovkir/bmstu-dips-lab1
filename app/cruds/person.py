@@ -51,49 +51,46 @@ class PersonCRUD(DBSessionContext):
         return person
 
     async def __filter_persons(self, persons, person_filter: PersonFilter):
-        if person_filter.first_name:
+        if person_filter.name:
             persons = persons.filter(
-                PersonModel.first_name.startswith(person_filter.first_name))
-        if person_filter.last_name:
+                PersonModel.name.startswith(person_filter.name))
+
+        if person_filter.min_age:
             persons = persons.filter(
-                PersonModel.last_name.startswith(person_filter.last_name))
-        if person_filter.min_birth_year:
+                PersonModel.age >= person_filter.min_age)
+
+        if person_filter.max_age:
             persons = persons.filter(
-                PersonModel.birth_year >= person_filter.min_birth_year)
-        if person_filter.max_birth_year:
+                PersonModel.age <= person_filter.max_age)
+
+        if person_filter.address:
             persons = persons.filter(
-                PersonModel.birth_year <= person_filter.max_birth_year)
-        if person_filter.email:
+                PersonModel.address.startswith(person_filter.address))
+        
+        if person_filter.work:
             persons = persons.filter(
-                PersonModel.email == person_filter.email)
-        if person_filter.is_man != None:
-            persons = persons.filter(
-                PersonModel.is_man == person_filter.is_man)
+                PersonModel.work.startswith(person_filter.work))
         
         return persons
     
     async def __sort_persons(self, persons, sort_field: SortPerson):
         match sort_field:
-            case SortPerson.FirstNameAsc:
-                persons = persons.order_by(PersonModel.first_name)
-            case SortPerson.FirstNameDesc:
-                persons = persons.order_by(PersonModel.first_name.desc())
-            case SortPerson.LastNameAsc:
-                persons = persons.order_by(PersonModel.last_name)
-            case SortPerson.LastNameDesc:
-                persons = persons.order_by(PersonModel.last_name.desc())
-            case SortPerson.BirthYearAsc:
-                persons = persons.order_by(PersonModel.birth_year)
-            case SortPerson.BirthYearDesc:
-                persons = persons.order_by(PersonModel.birth_year.desc())
-            case SortPerson.EmailAsc:
-                persons = persons.order_by(PersonModel.email)
-            case SortPerson.EmailDesc:
-                persons = persons.order_by(PersonModel.email.desc())
-            case SortPerson.IsManAsc:
-                persons = persons.order_by(PersonModel.is_man)
-            case SortPerson.IsManDesc:
-                persons = persons.order_by(PersonModel.is_man.desc())
+            case SortPerson.NameAsc:
+                persons = persons.order_by(PersonModel.name)
+            case SortPerson.NameDesc:
+                persons = persons.order_by(PersonModel.name.desc())
+            case SortPerson.AgeAsc:
+                persons = persons.order_by(PersonModel.age)
+            case SortPerson.AgeDesc:
+                persons = persons.order_by(PersonModel.age.desc())
+            case SortPerson.AddressAsc:
+                persons = persons.order_by(PersonModel.address)
+            case SortPerson.AddressDesc:
+                persons = persons.order_by(PersonModel.address.desc())
+            case SortPerson.WorkAsc:
+                persons = persons.order_by(PersonModel.work)
+            case SortPerson.WorkDesc:
+                persons = persons.order_by(PersonModel.work.desc())
             case SortPerson.IdDesc:
                 persons = persons.order_by(PersonModel.id.desc())
             case _:

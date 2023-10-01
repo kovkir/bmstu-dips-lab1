@@ -1,5 +1,5 @@
 from fastapi import status
-from fastapi.responses import JSONResponse
+from fastapi.responses import Response
 
 from config.database import DBSessionContext
 from cruds.person import PersonCRUD
@@ -30,8 +30,7 @@ class PersonServiece(DBSessionContext):
         if person == None:
             raise ConflictException(prefix="Add Person")
         
-        return JSONResponse(
-            content=None,
+        return Response(
             status_code=status.HTTP_201_CREATED,
             headers={"Location": f"/api/v1/persons/{person.id}"}
         )
@@ -41,15 +40,19 @@ class PersonServiece(DBSessionContext):
         if person == None:
             raise NotFoundException(prefix="Delete Person")
         
-        return await PersonCRUD(self.db).delete(person)
+        await PersonCRUD(self.db).delete(person)
+
+        return Response(
+            status_code=status.HTTP_204_NO_CONTENT
+        )
     
     async def patch(self, person_id: int, person_update: PersonUpdate):
         person = await PersonCRUD(self.db).get_by_id(person_id)
         if person == None:
-            raise NotFoundException(prefix="Patch Person")
+            raise NotFoundException(prefix="Update Person")
     
         person = await PersonCRUD(self.db).patch(person, person_update)
         if person == None:
-            raise ConflictException(prefix="Patch Person")
+            raise ConflictException(prefix="Update Person")
         
         return person

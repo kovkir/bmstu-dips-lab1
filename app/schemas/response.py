@@ -1,19 +1,27 @@
 from pydantic import BaseModel, ConfigDict
 
 
-class HTTPError(BaseModel):
-    detail: str
-
+class ErrorResponse(BaseModel):
     model_config = ConfigDict(
         json_schema_extra = {
-            "example": {"detail": "Method: exception description"},
+            "example": {
+                "message": "Method: exception description"
+            },
         }
     )
 
-
-class EmptyBody(BaseModel):
+class ValidationErrorResponse(BaseModel):
     model_config = ConfigDict(
         json_schema_extra = {
-            "example": "null",
+            "example": {
+                "message": "Invalid request",
+                "errors": [
+                    {
+                        "type": "type of error",
+                        "msg": "error message",
+                        "loc": "error location"
+                    }
+                ]
+            }
         }
     )

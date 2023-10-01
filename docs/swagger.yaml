@@ -1,0 +1,337 @@
+---
+openapi: 3.1.0
+info:
+  title: OpenAPI definition
+  version: v1
+servers:
+- url: http://localhost:8080/
+paths:
+  "/api/v1/persons/":
+    get:
+      tags:
+      - Person REST API operations
+      summary: Get All Persons
+      operationId: get_all_persons_api_v1_persons__get
+      parameters:
+      - name: name
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+      - name: min_age
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+            maximum: 120
+            minimum: 1
+          - type: 'null'
+          title: Min Age
+      - name: max_age
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+            maximum: 120
+            minimum: 1
+          - type: 'null'
+          title: Max Age
+      - name: address
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Address
+      - name: work
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Work
+      - name: sort_field
+        in: query
+        required: false
+        schema:
+          allOf:
+          - "$ref": "#/components/schemas/SortPerson"
+          default: id_asc
+          title: Sort Field
+      responses:
+        '200':
+          description: All Persons
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/Person"
+                title: Response 200 Get All Persons Api V1 Persons  Get
+        '400':
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ValidationErrorResponse"
+    post:
+      tags:
+      - Person REST API operations
+      summary: Create New Person
+      operationId: create_new_person_api_v1_persons__post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/PersonCreate"
+      responses:
+        '201':
+          description: Created new Person
+          headers:
+            Location:
+              description: Path to new Person
+              style: simple
+              schema:
+                type: string
+          content:
+            application/octet-stream:
+              example: ''
+        '400':
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ValidationErrorResponse"
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+  "/api/v1/persons/{person_id}/":
+    get:
+      tags:
+      - Person REST API operations
+      summary: Get Person By Id
+      operationId: get_person_by_id_api_v1_persons__person_id___get
+      parameters:
+      - name: person_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Person Id
+      responses:
+        '200':
+          description: Person for ID
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Person"
+        '400':
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ValidationErrorResponse"
+        '404':
+          description: Not found Person for ID
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+    delete:
+      tags:
+      - Person REST API operations
+      summary: Remove Person By Id
+      operationId: remove_person_by_id_api_v1_persons__person_id___delete
+      parameters:
+      - name: person_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Person Id
+      responses:
+        '204':
+          description: Person for ID was removed
+          content:
+            application/octet-stream:
+              example: ''
+        '400':
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ValidationErrorResponse"
+        '404':
+          description: Not found Person for ID
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+    patch:
+      tags:
+      - Person REST API operations
+      summary: Update Person By Id
+      operationId: update_person_by_id_api_v1_persons__person_id___patch
+      parameters:
+      - name: person_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Person Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/PersonUpdate"
+      responses:
+        '200':
+          description: Person for ID was updated
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Person"
+        '400':
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ValidationErrorResponse"
+        '404':
+          description: Not found Person for ID
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+components:
+  schemas:
+    ErrorResponse:
+      properties: {}
+      type: object
+      title: ErrorResponse
+      example:
+        message: 'Method: exception description'
+    Person:
+      properties:
+        name:
+          type: string
+          title: Name
+        age:
+          anyOf:
+          - type: integer
+            maximum: 120
+            minimum: 1
+          - type: 'null'
+          title: Age
+        address:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Address
+        work:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Work
+        id:
+          type: integer
+          title: Id
+      type: object
+      required:
+      - name
+      - id
+      title: Person
+    PersonCreate:
+      properties:
+        name:
+          type: string
+          title: Name
+        age:
+          anyOf:
+          - type: integer
+            maximum: 120
+            minimum: 1
+          - type: 'null'
+          title: Age
+        address:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Address
+        work:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Work
+      type: object
+      required:
+      - name
+      title: PersonCreate
+    PersonUpdate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        age:
+          anyOf:
+          - type: integer
+            maximum: 120
+            minimum: 1
+          - type: 'null'
+          title: Age
+        address:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Address
+        work:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Work
+      type: object
+      title: PersonUpdate
+    SortPerson:
+      type: string
+      enum:
+      - name_asc
+      - name_desc
+      - age_asc
+      - age_desc
+      - address_asc
+      - address_desc
+      - work_asc
+      - work_desc
+      - id_asc
+      - id_desc
+      title: SortPerson
+    ValidationErrorResponse:
+      properties: {}
+      type: object
+      title: ValidationErrorResponse
+      example:
+        errors:
+        - loc: error location
+          msg: error message
+          type: type of error
+        message: Invalid request
