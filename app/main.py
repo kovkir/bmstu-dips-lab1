@@ -11,26 +11,6 @@ from my_exeptions.handlers import (
     request_validation_exception_handler,
 )
 
-create_tables()
-
-
-app = FastAPI(
-    title="OpenAPI definition",
-    version="v1",
-    servers=[{"url": "http://localhost:8080"}]
-)
-app.include_router(api_router, prefix="/api/v1")
-
-
-@app.exception_handler(HTTPException)
-async def custom_http_exception_handler(request, exp):
-    return await http_exception_handler(request, exp)
-
-
-@app.exception_handler(RequestValidationError)
-async def custom_validation_exception_handler(request, exp):
-    return await request_validation_exception_handler(request, exp)
-
 
 def custom_openapi():
     if not app.openapi_schema:
@@ -57,7 +37,26 @@ def custom_openapi():
 
     return app.openapi_schema
 
+
+create_tables()
+
+app = FastAPI(
+    title="OpenAPI definition",
+    version="v1",
+    servers=[{"url": "http://localhost:8080"}]
+)
+app.include_router(api_router, prefix="/api/v1")
 app.openapi = custom_openapi
+
+
+@app.exception_handler(HTTPException)
+async def custom_http_exception_handler(request, exp):
+    return await http_exception_handler(request, exp)
+
+
+@app.exception_handler(RequestValidationError)
+async def custom_validation_exception_handler(request, exp):
+    return await request_validation_exception_handler(request, exp)
 
 
 if __name__ == '__main__':

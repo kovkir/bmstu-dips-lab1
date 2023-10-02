@@ -1,38 +1,37 @@
-from config.database import DBSessionContext
 from models.person import PersonModel
 from schemas.person import PersonFilter, PersonUpdate
 from enums.sort import SortPerson
+from cruds.interfaces import IPersonCRUD
 
 
-class PersonCRUD(DBSessionContext):
+class PersonCRUD(IPersonCRUD):
     async def get_all(
             self, 
             person_filter: PersonFilter,
-            sort_field: SortPerson, 
-            skip: int = 0, limit: int = 100
+            sort_field: SortPerson
         ):
-        persons = self.db.query(PersonModel)
+        persons = self._db.query(PersonModel)
         persons = await self.__filter_persons(persons, person_filter)
         persons = await self.__sort_persons(persons, sort_field)
     
-        return persons.offset(skip).limit(limit).all()
+        return persons.all()
 
     async def get_by_id(self, person_id: int):
-        return self.db.query(PersonModel).filter(PersonModel.id == person_id).first()
+        return self._db.query(PersonModel).filter(PersonModel.id == person_id).first()
     
     async def add(self, person: PersonModel):
         try:
-            self.db.add(person)
-            self.db.commit()
-            self.db.refresh(person)
+            self._db.add(person)
+            self._db.commit()
+            self._db.refresh(person)
         except:
             return None
         
         return person
     
     async def delete(self, person: PersonModel):
-        self.db.delete(person)
-        self.db.commit()
+        self._db.delete(person)
+        self._db.commit()
         
         return person
 
@@ -42,9 +41,9 @@ class PersonCRUD(DBSessionContext):
             setattr(person, key, value)
         
         try:
-            self.db.add(person)
-            self.db.commit()
-            self.db.refresh(person)
+            self._db.add(person)
+            self._db.commit()
+            self._db.refresh(person)
         except:
             return None
         
@@ -97,4 +96,3 @@ class PersonCRUD(DBSessionContext):
                 persons = persons.order_by(PersonModel.id)
         
         return persons
-    

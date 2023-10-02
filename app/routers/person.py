@@ -8,6 +8,8 @@ from services.person import PersonServiece
 from enums.responses import RespEnum
 from enums.sort import SortPerson
 from config.database import get_db
+from cruds.person import PersonCRUD
+from mocks.person import PersonMockCRUD
 
 
 router = APIRouter(
@@ -17,6 +19,9 @@ router = APIRouter(
         status.HTTP_400_BAD_REQUEST: RespEnum.InvalidData.value,
     }
 )
+
+# _iPersonCRUD = PersonCRUD
+_iPersonCRUD = PersonMockCRUD
 
 
 @router.get(
@@ -35,16 +40,19 @@ async def get_all_persons(
         work: str | None = None,
         sort_field: SortPerson = SortPerson.IdAsc
     ):
-    return await PersonServiece(db).get_all(
-        person_filter=PersonFilter(
-            name=name,
-            min_age=min_age,
-            max_age=max_age,
-            address=address,
-            work=work
-        ),
-        sort_field=sort_field
-    )
+    return await PersonServiece(
+            personCRUD=_iPersonCRUD,
+            db=db,
+        ).get_all(
+            person_filter=PersonFilter(
+                name=name,
+                min_age=min_age,
+                max_age=max_age,
+                address=address,
+                work=work
+            ),
+            sort_field=sort_field
+        )
 
 
 @router.get(
@@ -59,7 +67,10 @@ async def get_person_by_id(
         db: Annotated[Session, Depends(get_db)],
         person_id: int
     ):
-    return await PersonServiece(db).get_by_id(person_id)
+    return await PersonServiece(
+            personCRUD=_iPersonCRUD,
+            db=db,
+        ).get_by_id(person_id)
 
 
 @router.post(
@@ -75,7 +86,15 @@ async def create_new_person(
         db: Annotated[Session, Depends(get_db)], 
         person_create: PersonCreate
     ):
-    return await PersonServiece(db).add(person_create)
+    person = await PersonServiece(
+            personCRUD=_iPersonCRUD,
+            db=db,
+        ).add(person_create)
+    
+    return Response(
+            status_code=status.HTTP_201_CREATED,
+            headers={"Location": f"/api/v1/persons/{person.id}"}
+        )
 
 
 @router.delete(
@@ -91,7 +110,14 @@ async def remove_person_by_id(
         db: Annotated[Session, Depends(get_db)], 
         person_id: int
     ):
-    return await PersonServiece(db).delete(person_id)
+    person = await PersonServiece(
+            personCRUD=_iPersonCRUD,
+            db=db,
+        ).delete(person_id)
+    
+    return Response(
+            status_code=status.HTTP_204_NO_CONTENT
+        )
 
 
 @router.patch(
@@ -108,4 +134,7 @@ async def update_person_by_id(
         person_id: int,
         person_update: PersonUpdate
     ):
-    return await PersonServiece(db).patch(person_id, person_update)
+    return await PersonServiece(
+            personCRUD=_iPersonCRUD,
+            db=db,
+        ).patch(person_id, person_update)
