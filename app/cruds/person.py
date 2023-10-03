@@ -1,7 +1,7 @@
 from models.person import PersonModel
 from schemas.person import PersonFilter, PersonUpdate
 from enums.sort import SortPerson
-from cruds.interfaces import IPersonCRUD
+from cruds.interfaces.person import IPersonCRUD
 
 
 class PersonCRUD(IPersonCRUD):

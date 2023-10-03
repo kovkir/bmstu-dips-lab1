@@ -10,7 +10,7 @@ class RespEnum(Enum):
     }
     GetByID = {
         "model": Person,
-        "description": "Person for ID",
+        "description": "Person by ID",
     }
     Created = {
         "description": "Created new Person",
@@ -30,7 +30,7 @@ class RespEnum(Enum):
         },
     }
     Delete = {
-        "description": "Person for ID was removed",
+        "description": "Person by ID was removed",
         "content": {
             "application/octet-stream": {
                 "example": ""
@@ -39,7 +39,7 @@ class RespEnum(Enum):
     }
     Patch = {
         "model": Person,
-        "description": "Person for ID was updated",
+        "description": "Person by ID was updated",
     }
 
 
@@ -49,7 +49,7 @@ class RespEnum(Enum):
     }
     NotFound = {
         "model": ErrorResponse,
-        "description": "Not found Person for ID",
+        "description": "Not found Person by ID",
     }
     Conflict = {
         "model": ErrorResponse,

@@ -4,12 +4,17 @@ from sqlalchemy.orm import Session
 from typing import Annotated
 
 from schemas.person import PersonFilter, PersonCreate, PersonUpdate
-from services.person import PersonServiece
+from services.person import PersonService
 from enums.responses import RespEnum
 from enums.sort import SortPerson
 from config.database import get_db
+from cruds.interfaces.person import IPersonCRUD
 from cruds.person import PersonCRUD
-from mocks.person import PersonMockCRUD
+# from mocks.person import PersonMockCRUD
+
+
+def get_person_crud() -> type[IPersonCRUD]:
+    return PersonCRUD
 
 
 router = APIRouter(
@@ -20,9 +25,6 @@ router = APIRouter(
     }
 )
 
-# _iPersonCRUD = PersonCRUD
-_iPersonCRUD = PersonMockCRUD
-
 
 @router.get(
     "/", 
@@ -32,7 +34,8 @@ _iPersonCRUD = PersonMockCRUD
     }
 )
 async def get_all_persons(
-        db: Annotated[Session, Depends(get_db)],
+        db: Annotated[Session, Depends(get_db)], 
+        personCRUD: Annotated[IPersonCRUD, Depends(get_person_crud)],
         name: str | None = None,
         min_age: Annotated[int | None, Query(ge=1, le=120)] = None,
         max_age: Annotated[int | None, Query(ge=1, le=120)] = None,
@@ -40,8 +43,8 @@ async def get_all_persons(
         work: str | None = None,
         sort_field: SortPerson = SortPerson.IdAsc
     ):
-    return await PersonServiece(
-            personCRUD=_iPersonCRUD,
+    return await PersonService(
+            personCRUD=personCRUD,
             db=db,
         ).get_all(
             person_filter=PersonFilter(
@@ -64,11 +67,12 @@ async def get_all_persons(
     }
 )
 async def get_person_by_id(
-        db: Annotated[Session, Depends(get_db)],
+        db: Annotated[Session, Depends(get_db)], 
+        personCRUD: Annotated[IPersonCRUD, Depends(get_person_crud)],
         person_id: int
     ):
-    return await PersonServiece(
-            personCRUD=_iPersonCRUD,
+    return await PersonService(
+            personCRUD=personCRUD,
             db=db,
         ).get_by_id(person_id)
 
@@ -84,10 +88,11 @@ async def get_person_by_id(
 )
 async def create_new_person(
         db: Annotated[Session, Depends(get_db)], 
+        personCRUD: Annotated[IPersonCRUD, Depends(get_person_crud)], 
         person_create: PersonCreate
     ):
-    person = await PersonServiece(
-            personCRUD=_iPersonCRUD,
+    person = await PersonService(
+            personCRUD=personCRUD,
             db=db,
         ).add(person_create)
     
@@ -107,11 +112,12 @@ async def create_new_person(
     }
 )
 async def remove_person_by_id(
-        db: Annotated[Session, Depends(get_db)], 
+        db: Annotated[Session, Depends(get_db)],
+        personCRUD: Annotated[IPersonCRUD, Depends(get_person_crud)], 
         person_id: int
     ):
-    person = await PersonServiece(
-            personCRUD=_iPersonCRUD,
+    person = await PersonService(
+            personCRUD=personCRUD,
             db=db,
         ).delete(person_id)
     
@@ -131,10 +137,11 @@ async def remove_person_by_id(
 )
 async def update_person_by_id(
         db: Annotated[Session, Depends(get_db)], 
+        personCRUD: Annotated[IPersonCRUD, Depends(get_person_crud)],
         person_id: int,
         person_update: PersonUpdate
     ):
-    return await PersonServiece(
-            personCRUD=_iPersonCRUD,
+    return await PersonService(
+            personCRUD=personCRUD,
             db=db,
         ).patch(person_id, person_update)

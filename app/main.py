@@ -6,7 +6,7 @@ from fastapi.openapi.utils import get_openapi
 from routers.api import router as api_router
 from config.database import create_tables
 from config.config import get_db_settings
-from my_exeptions.handlers import (
+from my_exceptions.handlers import (
     http_exception_handler,
     request_validation_exception_handler,
 )
@@ -50,8 +50,8 @@ app.openapi = custom_openapi
 
 
 @app.exception_handler(HTTPException)
-async def custom_http_exception_handler(request, exp):
-    return await http_exception_handler(request, exp)
+async def custom_http_exception_handler(request, exc):
+    return await http_exception_handler(request, exc)
 
 
 @app.exception_handler(RequestValidationError)

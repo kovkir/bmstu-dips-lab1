@@ -2,17 +2,17 @@ from sqlalchemy.orm import Session
 
 from models.person import PersonModel
 from schemas.person import PersonCreate, PersonFilter, PersonUpdate
-from my_exeptions.http_exeptions import NotFoundException, ConflictException
+from my_exceptions.http_exceptions import NotFoundException, ConflictException
 from enums.sort import SortPerson
-from cruds.interfaces import IPersonCRUD
+from cruds.interfaces.person import IPersonCRUD
 
 
-class PersonServiece():
-    def __init__(self, personCRUD: IPersonCRUD, db: Session):
+class PersonService():
+    def __init__(self, personCRUD: type[IPersonCRUD], db: Session):
         self._personCRUD = personCRUD(db)
         
     async def get_all(
-            self, 
+            self,
             person_filter: PersonFilter, 
             sort_field: SortPerson
         ):
