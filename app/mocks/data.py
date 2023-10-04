@@ -21,4 +21,11 @@ class PersonDataMock:
             "address": None,
             "work": "developer"
         },
+        {
+            "id": 4,
+            "name": "Vlad",
+            "age": 22,
+            "address": None,
+            "work": None
+        },
     ]

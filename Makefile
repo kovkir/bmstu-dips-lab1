@@ -15,5 +15,8 @@ delete-all:
 restart:
 	docker-compose down && \
 	docker rmi dips-app && \
-	docker-compose up -d && \
-	docker ps -a
+	docker-compose up -d
+
+run-tests:
+	pytest -vs app/unit_tests/person.py
+	

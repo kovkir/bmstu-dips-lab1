@@ -30,13 +30,11 @@ class PersonMockCRUD(IPersonCRUD, PersonDataMock):
         for item in self._persons:
             if item["name"] == person.name:
                 return None
-            if item.get("address") != None and \
-               item.get("address") == person.address:
-                return None
             
         self._persons.append(
             {
-                "id": 1 if len(self._persons) else self._persons[-1].id + 1,
+                "id": 1 if len(self._persons) == 0 
+                        else self._persons[-1]["id"] + 1,
                 "name": person.name,
                 "age": person.age,
                 "address": person.address,
@@ -53,7 +51,7 @@ class PersonMockCRUD(IPersonCRUD, PersonDataMock):
                 deleted_person = self._persons.pop(i)
                 break
                 
-        return deleted_person
+        return PersonModel(**deleted_person)
 
     async def patch(
             self, 
@@ -62,12 +60,9 @@ class PersonMockCRUD(IPersonCRUD, PersonDataMock):
         ) -> PersonModel | None:
             
         for item in self._persons:
-            if item["id"] != person.id:
-                if item["name"] == person.name:
-                    return None
-                if item.get("address") != None and \
-                   item.get("address") == person.address:
-                    return None
+            if item["id"] != person.id and \
+               item["name"] == person_update.name:
+                return None
         
         update_fields = person_update.model_dump(exclude_unset=True) 
         for item in self._persons:

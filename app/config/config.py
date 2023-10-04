@@ -13,5 +13,6 @@ def get_db_url(config_name: str="./app/config/config.yaml"):
     
     return f"postgresql://{settings['postgres_db']['user']}:"\
                         f"{settings['postgres_db']['password']}@"\
-                        f"{settings['postgres_db']['host']}/"\
+                        f"{settings['postgres_db']['host']}:"\
+                        f"{settings['postgres_db']['port']}/"\
                         f"{settings['postgres_db']['db']}"

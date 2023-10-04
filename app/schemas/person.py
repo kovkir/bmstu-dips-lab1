@@ -11,7 +11,7 @@ class PersonBase(BaseModel):
 
 
 class PersonFilter(BaseModel):
-    name: str | None
+    name: str | None = None
     min_age: Annotated[int | None, Query(ge=1, le=120)] = None
     max_age: Annotated[int | None, Query(ge=1, le=120)] = None
     address: str | None = None
