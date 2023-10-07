@@ -1,10 +1,10 @@
 from copy import deepcopy
 
-from app.mocks.person import PersonMockCRUD, PersonDataMock
-from app.services.person import PersonService
-from app.schemas.person import PersonFilter, PersonCreate, PersonUpdate
-from app.enums.sort import SortPerson
-from app.models.person import PersonModel
+from mocks.person import PersonMockCRUD, PersonDataMock
+from services.person import PersonService
+from schemas.person import PersonFilter, PersonCreate, PersonUpdate
+from enums.sort import SortPerson
+from models.person import PersonModel
 from my_exceptions.http_exceptions import NotFoundException, ConflictException
 
 
