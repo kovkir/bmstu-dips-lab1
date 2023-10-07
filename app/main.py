@@ -43,7 +43,8 @@ create_tables()
 app = FastAPI(
     title="OpenAPI definition",
     version="v1",
-    servers=[{"url": "http://localhost:8080"}]
+    servers=[{"url": "http://94.139.245.224:8080"},
+             {"url": "http://localhost:8080"}]
 )
 app.include_router(api_router, prefix="/api/v1")
 app.openapi = custom_openapi
