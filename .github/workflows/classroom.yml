@@ -29,6 +29,4 @@ jobs:
         run: pip3.10 install -r requirements.txt
 
       - name: Run unit tests
-        uses: fylein/python-pytest-github-action@v2
-        with:
-          args: pytest -vs app/unit_tests/person.py
+        run: pytest -vs app/unit_tests/person.py
