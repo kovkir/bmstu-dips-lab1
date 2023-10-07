@@ -1,0 +1,11 @@
+postgres_db:
+  user: postgres
+  password: password
+  db: person_db
+  host: database
+  port: 5432
+app:
+  host: "0.0.0.0"
+  port: 8080
+  log_level: "info"
+  reload: True

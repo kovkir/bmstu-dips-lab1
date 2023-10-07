@@ -1,0 +1,62 @@
+name: GitHub Classroom Workflow
+on:
+  push:
+    branches:
+      - master
+      - develop
+      - lab_01
+  pull_request:
+    branches:
+      - master
+      - develop
+
+jobs:
+  unit-tests:
+    name: Run unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      
+      - name: Install the necessary packages
+        run: pip3.10 install -r requirements.txt
+
+      - name: Run unit tests
+        run: pytest -vs app/unit_tests/person.py
+
+  deploy:
+    name: Deploy service on VM
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Copy code to VM
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          source: "app,Dockerfile,docker-compose.yml,requirements.txt"
+          target: /home/${{ secrets.SSH_USERNAME }}/person-service
+
+      - name: Run app on VM
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd /home/${{ secrets.SSH_USERNAME }}/person-service
+            echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker-compose down
+            echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker rmi app
+            echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker-compose up -d

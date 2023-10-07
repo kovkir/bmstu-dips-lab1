@@ -1,0 +1,40 @@
+version: '3.1'
+
+services:
+  database:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=person_db
+    volumes:
+      - ./db_data:/var/lib/postgresql/data
+    networks:
+      - default
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+  
+  app:
+    image: app
+    build:
+      context: "."
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - default
+    depends_on:
+      database:
+        condition: service_healthy
+
+volumes:
+  db_data:
+    driver: local
+
+networks:
+  default:
