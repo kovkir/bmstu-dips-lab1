@@ -20,6 +20,7 @@ services:
       retries: 10
   
   app:
+    image: app
     build:
       context: "."
       dockerfile: Dockerfile
