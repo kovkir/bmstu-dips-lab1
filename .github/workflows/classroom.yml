@@ -30,4 +30,4 @@ jobs:
       - name: Run unit tests
         uses: fylein/python-pytest-github-action@v2
         with:
-          args: make run-tests
+          args: pytest -vs app/unit_tests/person.py
