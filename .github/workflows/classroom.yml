@@ -25,4 +25,4 @@ jobs:
           python-version: '3.10.13'
       
       - name: Run unit tests
-        run: mske run-tests
+        run: make run-tests
